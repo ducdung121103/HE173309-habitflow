@@ -9,9 +9,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import { SocialAuthButtons } from "@/components/SocialAuthButtons";
+import { useAuth } from "@/context/AuthContext";
 
 export default function SignUpPage() {
     const router = useRouter();
+    const { signup } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -19,28 +21,31 @@ export default function SignUpPage() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setIsLoading(true);
         setError("");
 
         if (password.length < 8) {
             setError("Mật khẩu phải có ít nhất 8 ký tự");
+            setIsLoading(false);
             return;
         }
 
         if (password !== confirmPassword) {
             setError("Mật khẩu không khớp");
+            setIsLoading(false);
             return;
         }
 
-        setIsLoading(true);
-
-        // Simulate API call
-        setTimeout(() => {
+        try {
+            await signup(name, email);
+            router.push("/dashboard?welcome=true");
+        } catch (err: any) {
+            setError(err.message || "Đăng ký thất bại");
+        } finally {
             setIsLoading(false);
-            // In a real app, create user then redirect
-            router.push("/dashboard");
-        }, 1500);
+        }
     };
 
     return (

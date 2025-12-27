@@ -7,22 +7,30 @@ import { Flame, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
 import { SocialAuthButtons } from "@/components/SocialAuthButtons";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
     const router = useRouter();
+    const { login } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsLoading(true);
+        setError("");
 
-        // Simulate API call
-        setTimeout(() => {
-            setIsLoading(false);
+        try {
+            await login(email); // Passwords are not checked in this demo, just email lookup
             router.push("/dashboard");
-        }, 1000);
+        } catch (err: any) {
+            setError(err.message || "Đã xảy ra lỗi khi đăng nhập.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -53,6 +61,8 @@ export default function LoginPage() {
                                     required
                                     placeholder="hello@example.com"
                                     className="bg-secondary/50"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                 />
                             </div>
 
@@ -73,8 +83,14 @@ export default function LoginPage() {
                                     autoComplete="current-password"
                                     required
                                     className="bg-secondary/50"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
                                 />
                             </div>
+
+                            {error && (
+                                <p className="text-sm text-red-500 text-center">{error}</p>
+                            )}
 
                             <Button
                                 type="submit"

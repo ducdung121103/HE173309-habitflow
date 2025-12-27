@@ -1,6 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import { Flame } from "lucide-react";
 import { NotificationBell } from "@/components/notifications/NotificationBell";
+import { useAuth } from "@/context/AuthContext";
+import { UserMenu } from "@/components/UserMenu";
 
 export function Navbar() {
     return (
@@ -18,20 +22,36 @@ export function Navbar() {
                 </div>
                 <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
                     <NotificationBell />
-                    <Link
-                        href="/login"
-                        className="text-sm font-medium transition-colors hover:text-foreground/80 text-foreground/60"
-                    >
-                        Đăng nhập
-                    </Link>
-                    <Link
-                        href="/signup"
-                        className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-                    >
-                        Đăng ký
-                    </Link>
+                    <AuthButtons />
                 </div>
             </div>
         </nav>
+    );
+}
+
+function AuthButtons() {
+    const { user, loading } = useAuth();
+
+    if (loading) return <div className="h-9 w-20 bg-muted/20 animate-pulse rounded-md"></div>;
+
+    if (user) {
+        return <UserMenu />;
+    }
+
+    return (
+        <>
+            <Link
+                href="/login"
+                className="text-sm font-medium transition-colors hover:text-foreground/80 text-foreground/60"
+            >
+                Đăng nhập
+            </Link>
+            <Link
+                href="/signup"
+                className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+            >
+                Đăng ký
+            </Link>
+        </>
     );
 }

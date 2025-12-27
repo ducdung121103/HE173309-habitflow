@@ -17,6 +17,7 @@ export const metadata: Metadata = {
   description: "Theo dõi và xây dựng thói quen tốt mỗi ngày",
 };
 
+import { AuthProvider } from "@/context/AuthContext";
 import { HabitProvider } from "@/context/HabitContext";
 import { NotificationProvider } from "@/context/NotificationContext";
 
@@ -30,11 +31,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <HabitProvider>
-          <NotificationProvider>
-            {children}
-          </NotificationProvider>
-        </HabitProvider>
+        <AuthProvider>
+          <HabitProvider>
+            <NotificationProvider>
+              {children}
+            </NotificationProvider>
+          </HabitProvider>
+        </AuthProvider>
       </body>
     </html>
   );

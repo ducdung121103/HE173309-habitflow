@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Habit } from "@/types/habit";
+import { useAuth } from "./AuthContext";
 
 interface HabitContextType {
     habits: Habit[];
@@ -15,27 +16,41 @@ const HabitContext = createContext<HabitContextType | undefined>(undefined);
 
 export function HabitProvider({ children }: { children: React.ReactNode }) {
     const [habits, setHabits] = useState<Habit[]>([]);
+    // Habit loading depends on Auth loading + data fetching
     const [loading, setLoading] = useState(true);
+    const { user, loading: authLoading } = useAuth();
 
     // Load from local storage
     useEffect(() => {
-        const saved = localStorage.getItem("habitflow_habits");
+        if (authLoading) return; // Wait for auth to settle
+
+        if (!user) {
+            setHabits([]);
+            setLoading(false);
+            return;
+        }
+
+        const key = `habitflow_habits_${user.id}`;
+        const saved = localStorage.getItem(key);
         if (saved) {
             try {
                 setHabits(JSON.parse(saved));
             } catch (e) {
                 console.error("Failed to load habits", e);
             }
+        } else {
+            setHabits([]); // Clear old habits if new user has none
         }
         setLoading(false);
-    }, []);
+    }, [user, authLoading]);
 
     // Save to local storage
     useEffect(() => {
-        if (!loading) {
-            localStorage.setItem("habitflow_habits", JSON.stringify(habits));
-        }
-    }, [habits, loading]);
+        if (authLoading || loading || !user) return;
+
+        const key = `habitflow_habits_${user.id}`;
+        localStorage.setItem(key, JSON.stringify(habits));
+    }, [habits, loading, user, authLoading]);
 
     const addHabit = (data: Omit<Habit, "id" | "createdAt" | "completedDates" | "streak">) => {
         const newHabit: Habit = {
