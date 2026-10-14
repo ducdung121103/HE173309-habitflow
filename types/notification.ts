@@ -1,4 +1,14 @@
-export type NotificationType = "reminder" | "risk" | "milestone" | "achievement" | "success";
+export type NotificationType =
+    | "reminder"
+    | "risk"
+    | "milestone"
+    | "achievement"
+    | "success"
+    | "appointment"
+    | "status"
+    | "StatusChanged"
+    | "Reminder"
+    | "NewAppointment";
 
 export interface Notification {
     id: string;
@@ -8,5 +18,6 @@ export interface Notification {
     timestamp: string;
     read: boolean;
     habitId?: string;
+    appointmentId?: number;
     priority?: "low" | "medium" | "high";
 }

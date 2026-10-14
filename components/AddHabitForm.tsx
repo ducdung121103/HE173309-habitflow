@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useHabits } from "@/context/HabitContext";
 import { Button } from "@/components/ui/button";
@@ -20,13 +20,7 @@ export function AddHabitForm() {
     const { addHabit } = useHabits();
     const searchParams = useSearchParams();
     const router = useRouter();
-    const [open, setOpen] = useState(false);
-
-    useEffect(() => {
-        if (searchParams.get("action") === "new") {
-            setOpen(true);
-        }
-    }, [searchParams]);
+    const [open, setOpen] = useState(() => searchParams?.get("action") === "new");
 
     const handleOpenChange = (isOpen: boolean) => {
         setOpen(isOpen);

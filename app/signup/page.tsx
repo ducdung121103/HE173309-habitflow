@@ -3,12 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Flame, ArrowRight } from "lucide-react";
+import { Calendar, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-import { SocialAuthButtons } from "@/components/SocialAuthButtons";
 import { useAuth } from "@/context/AuthContext";
 
 export default function SignUpPage() {
@@ -17,6 +15,7 @@ export default function SignUpPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
@@ -26,23 +25,24 @@ export default function SignUpPage() {
         setIsLoading(true);
         setError("");
 
-        if (password.length < 8) {
-            setError("Mật khẩu phải có ít nhất 8 ký tự");
+        if (password.length < 6) {
+            setError("Mật khẩu phải có ít nhất 6 ký tự");
             setIsLoading(false);
             return;
         }
 
         if (password !== confirmPassword) {
-            setError("Mật khẩu không khớp");
+            setError("Mật khẩu xác nhận không khớp");
             setIsLoading(false);
             return;
         }
 
         try {
-            await signup(name, email);
+            await signup(name, email, phone);
             router.push("/dashboard?welcome=true");
-        } catch (err: any) {
-            setError(err.message || "Đăng ký thất bại");
+        } catch (err: unknown) {
+            const errorObj = err as Error;
+            setError(errorObj.message || "Đăng ký thất bại");
         } finally {
             setIsLoading(false);
         }
@@ -52,57 +52,68 @@ export default function SignUpPage() {
         <div className="flex min-h-screen flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-background">
             <div className="w-full max-w-md space-y-8">
                 <div className="flex flex-col items-center">
-                    <div className="bg-primary/10 p-2 rounded-full mb-4">
-                        <Flame className="h-8 w-8 text-primary" fill="currentColor" />
+                    <div className="bg-primary/10 text-primary p-3 rounded-2xl mb-4 border border-primary/20">
+                        <Calendar className="h-8 w-8" />
                     </div>
-                    <h2 className="mt-2 text-center text-3xl font-bold tracking-tight">
-                        Tạo tài khoản mới
+                    <h2 className="text-center text-3xl font-extrabold tracking-tight">
+                        Tạo Tài Khoản Khách Hàng
                     </h2>
                     <p className="mt-2 text-center text-sm text-muted-foreground">
-                        Bắt đầu hành trình cải thiện thói quen ngay hôm nay
+                        Đăng ký để quản lý và theo dõi lịch khám trực tuyến
                     </p>
                 </div>
 
-                <div className="mt-8 space-y-6">
+                <div className="mt-6 space-y-6">
                     <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
-                        <form className="space-y-6" onSubmit={handleSubmit}>
-                            <div className="space-y-2">
+                        <form className="space-y-4" onSubmit={handleSubmit}>
+                            <div className="space-y-1.5">
                                 <Label htmlFor="name">Họ và Tên</Label>
                                 <Input
                                     id="name"
                                     name="name"
                                     type="text"
-                                    autoComplete="name"
                                     required
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    placeholder="John Doe"
+                                    placeholder="Nguyễn Văn A"
                                     className="bg-secondary/50"
                                 />
                             </div>
 
-                            <div className="space-y-2">
+                            <div className="space-y-1.5">
                                 <Label htmlFor="email">Địa chỉ Email</Label>
                                 <Input
                                     id="email"
                                     name="email"
                                     type="email"
-                                    autoComplete="email"
                                     required
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="hello@example.com"
+                                    placeholder="a.nguyen@example.com"
                                     className="bg-secondary/50"
                                 />
                             </div>
 
-                            <div className="space-y-2">
+                            <div className="space-y-1.5">
+                                <Label htmlFor="phone">Số điện thoại</Label>
+                                <Input
+                                    id="phone"
+                                    name="phone"
+                                    type="tel"
+                                    required
+                                    value={phone}
+                                    onChange={(e) => setPhone(e.target.value)}
+                                    placeholder="0901234567"
+                                    className="bg-secondary/50"
+                                />
+                            </div>
+
+                            <div className="space-y-1.5">
                                 <Label htmlFor="password">Mật khẩu</Label>
                                 <Input
                                     id="password"
                                     name="password"
                                     type="password"
-                                    autoComplete="new-password"
                                     required
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
@@ -110,13 +121,12 @@ export default function SignUpPage() {
                                 />
                             </div>
 
-                            <div className="space-y-2">
+                            <div className="space-y-1.5">
                                 <Label htmlFor="confirmPassword">Xác nhận Mật khẩu</Label>
                                 <Input
                                     id="confirmPassword"
                                     name="confirmPassword"
                                     type="password"
-                                    autoComplete="new-password"
                                     required
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
@@ -125,45 +135,30 @@ export default function SignUpPage() {
                             </div>
 
                             {error && (
-                                <p className="text-sm text-red-500 text-center">{error}</p>
+                                <p className="text-xs text-rose-500 font-medium text-center">{error}</p>
                             )}
 
                             <Button
                                 type="submit"
-                                className="w-full"
+                                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold mt-2"
                                 disabled={isLoading}
                             >
                                 {isLoading ? (
                                     "Đang tạo tài khoản..."
                                 ) : (
                                     <>
-                                        Đăng ký <ArrowRight className="ml-2 h-4 w-4" />
+                                        Đăng ký ngay <ArrowRight className="ml-2 h-4 w-4" />
                                     </>
                                 )}
                             </Button>
                         </form>
-
-                        <div className="mt-6">
-                            <div className="relative">
-                                <div className="absolute inset-0 flex items-center">
-                                    <div className="w-full border-t border-border" />
-                                </div>
-                                <div className="relative flex justify-center text-sm">
-                                    <span className="bg-card px-2 text-muted-foreground">
-                                        Hoặc tiếp tục với
-                                    </span>
-                                </div>
-                            </div>
-
-                            <SocialAuthButtons />
-                        </div>
                     </div>
 
-                    <p className="text-center text-sm text-muted-foreground">
+                    <p className="text-center text-xs text-muted-foreground">
                         Đã có tài khoản?{" "}
                         <Link
                             href="/login"
-                            className="font-medium text-primary hover:text-primary/80"
+                            className="font-medium text-primary hover:underline"
                         >
                             Đăng nhập
                         </Link>

@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "@/context/AuthContext";
+import { HabitProvider } from "@/context/HabitContext";
+import { NotificationProvider } from "@/context/NotificationContext";
+import { SignalRProvider } from "@/context/SignalRContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,13 +17,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "HabitFlow - Xây Dựng Thói Quen",
-  description: "Theo dõi và xây dựng thói quen tốt mỗi ngày",
+  title: "AppointmentSystem - Quản Lý & Đặt Lịch Hẹn Trực Tuyến",
+  description: "Hệ thống đặt lịch khám và quản lý lịch hẹn trực tuyến chuyên nghiệp kết hợp SignalR thời gian thực",
 };
-
-import { AuthProvider } from "@/context/AuthContext";
-import { HabitProvider } from "@/context/HabitContext";
-import { NotificationProvider } from "@/context/NotificationContext";
 
 export default function RootLayout({
   children,
@@ -27,16 +27,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="vi">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          <HabitProvider>
-            <NotificationProvider>
-              {children}
-            </NotificationProvider>
-          </HabitProvider>
+          <SignalRProvider>
+            <HabitProvider>
+              <NotificationProvider>
+                {children}
+              </NotificationProvider>
+            </HabitProvider>
+          </SignalRProvider>
         </AuthProvider>
       </body>
     </html>

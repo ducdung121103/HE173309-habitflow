@@ -4,7 +4,6 @@ import { Habit } from "@/types/habit";
 import { useHabits } from "@/context/HabitContext";
 import { cn } from "@/lib/utils";
 import { Check, Flame, Trash2 } from "lucide-react";
-import { format } from "date-fns";
 import { useState, useEffect } from "react";
 
 interface HabitCardProps {
@@ -21,7 +20,6 @@ export function HabitCard({ habit }: HabitCardProps) {
 
     useEffect(() => {
         if (!habit.timeOfDay || !isCompletedToday) {
-            setCountdown(null);
             return;
         }
 
@@ -29,7 +27,7 @@ export function HabitCard({ habit }: HabitCardProps) {
             const now = new Date();
             const [hours, minutes] = habit.timeOfDay!.split(':').map(Number);
 
-            let targetDate = new Date();
+            const targetDate = new Date();
             targetDate.setHours(hours, minutes, 0, 0);
 
             if (targetDate.getTime() <= now.getTime()) {

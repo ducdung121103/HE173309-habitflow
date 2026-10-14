@@ -2,59 +2,43 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { useHabits } from "@/context/HabitContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle
-} from "@/components/ui/card"; // Assuming Card components exist or use divs if not
-import { Flame, Calendar, Award } from "lucide-react";
-
-// Fallback to basic divs if Card components missing (safeguard)
-// But based on 'components/ui' listing earlier, 'card.tsx' was NOT listed.
-// So I should stick to standard HTML/Tailwind or create card.tsx.
-// Let's stick to standard Tailwind for the layout to be safe and fast.
+import { Calendar, CheckCircle2, ShieldCheck, Clock } from "lucide-react";
+import { api } from "@/lib/api";
+import { DashboardStats } from "@/types/appointment";
 
 export default function ProfilePage() {
     const { user, updateProfile } = useAuth();
-    const { habits } = useHabits();
-
-    // Form state
     const [name, setName] = useState("");
     const [avatarUrl, setAvatarUrl] = useState("");
+    const [phone, setPhone] = useState("");
     const [isEditing, setIsEditing] = useState(false);
     const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
+    const [stats, setStats] = useState<DashboardStats | null>(null);
 
     useEffect(() => {
         if (user) {
             setName(user.name);
             setAvatarUrl(user.avatar || "");
+            setPhone(user.phone || "");
         }
+        api.getDashboardStats().then(setStats).catch(() => {});
     }, [user]);
 
-    if (!user) return null; // Should be protected by layout
+    if (!user) return null;
 
     const handleSave = () => {
         setSaveStatus("saving");
         setTimeout(() => {
-            updateProfile({ name, avatar: avatarUrl });
+            updateProfile({ name, avatar: avatarUrl, phone });
             setSaveStatus("saved");
             setIsEditing(false);
             setTimeout(() => setSaveStatus("idle"), 2000);
         }, 500);
     };
-
-    // Stats
-    const totalHabits = habits.length;
-    const activeStreaks = habits.filter(h => h.streak > 0).length;
-    const totalStreakDays = habits.reduce((acc, h) => acc + h.streak, 0);
 
     return (
         <div className="space-y-8 max-w-4xl mx-auto py-8">
@@ -62,10 +46,10 @@ export default function ProfilePage() {
                 {/* Profile Information */}
                 <div className="flex-1 space-y-6">
                     <div className="border border-border bg-card rounded-xl overflow-hidden shadow-sm">
-                        <div className="h-32 bg-gradient-to-r from-primary/20 to-primary/5"></div>
+                        <div className="h-32 bg-gradient-to-r from-primary/20 via-blue-500/10 to-indigo-500/20" />
                         <div className="px-6 pb-6 relative">
                             <div className="absolute -top-12">
-                                <Avatar className="h-24 w-24 border-4 border-card">
+                                <Avatar className="h-24 w-24 border-4 border-card shadow-md">
                                     <AvatarImage src={avatarUrl} alt={name} />
                                     <AvatarFallback className="text-2xl font-bold bg-muted">{name.charAt(0).toUpperCase()}</AvatarFallback>
                                 </Avatar>
@@ -73,10 +57,15 @@ export default function ProfilePage() {
 
                             <div className="pt-16 flex justify-between items-start">
                                 <div>
-                                    <h1 className="text-2xl font-bold">{user.name}</h1>
-                                    <p className="text-muted-foreground">{user.email}</p>
+                                    <div className="flex items-center gap-2">
+                                        <h1 className="text-2xl font-bold">{user.name}</h1>
+                                        <span className="text-xs px-2.5 py-0.5 rounded-full bg-primary/10 text-primary font-semibold">
+                                            {user.role || "Customer"}
+                                        </span>
+                                    </div>
+                                    <p className="text-muted-foreground text-sm">{user.email}</p>
                                     <p className="text-xs text-muted-foreground mt-1">
-                                        Tham gia: {new Date(user.createdAt).toLocaleDateString("vi-VN")}
+                                        Điện thoại: {user.phone || "Chưa cập nhật"}
                                     </p>
                                 </div>
                                 <Button
@@ -98,6 +87,15 @@ export default function ProfilePage() {
                                         />
                                     </div>
                                     <div className="space-y-2">
+                                        <Label htmlFor="phone">Số điện thoại</Label>
+                                        <Input
+                                            id="phone"
+                                            value={phone}
+                                            onChange={(e) => setPhone(e.target.value)}
+                                            placeholder="0901234567"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
                                         <Label htmlFor="avatar">Avatar URL</Label>
                                         <Input
                                             id="avatar"
@@ -105,9 +103,6 @@ export default function ProfilePage() {
                                             onChange={(e) => setAvatarUrl(e.target.value)}
                                             placeholder="https://..."
                                         />
-                                        <p className="text-xs text-muted-foreground">
-                                            Dán link ảnh từ internet vào đây.
-                                        </p>
                                     </div>
                                     <div className="flex justify-end pt-2">
                                         <Button onClick={handleSave} disabled={saveStatus === "saving"}>
@@ -124,7 +119,7 @@ export default function ProfilePage() {
                 <div className="w-full md:w-80 space-y-6">
                     <div className="border border-border bg-card rounded-xl p-6 shadow-sm">
                         <h3 className="font-semibold mb-4 flex items-center gap-2">
-                            <Award className="h-4 w-4 text-yellow-500" /> Thành Tựu
+                            <ShieldCheck className="h-4 w-4 text-emerald-500" /> Tổng Quan Hồ Sơ
                         </h3>
                         <div className="space-y-4">
                             <div className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg">
@@ -132,38 +127,38 @@ export default function ProfilePage() {
                                     <div className="p-2 bg-blue-500/10 rounded-md">
                                         <Calendar className="h-4 w-4 text-blue-500" />
                                     </div>
-                                    <div className="cursor-default">
-                                        <p className="text-sm font-medium">Thói Quen</p>
-                                        <p className="text-xs text-muted-foreground">Đang theo dõi</p>
+                                    <div>
+                                        <p className="text-sm font-medium">Tổng lịch hẹn</p>
+                                        <p className="text-xs text-muted-foreground">Trên hệ thống</p>
                                     </div>
                                 </div>
-                                <span className="font-bold text-xl">{totalHabits}</span>
+                                <span className="font-bold text-xl">{stats?.totalAppointments ?? 0}</span>
                             </div>
 
                             <div className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg">
                                 <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-orange-500/10 rounded-md">
-                                        <Flame className="h-4 w-4 text-orange-500" />
+                                    <div className="p-2 bg-emerald-500/10 rounded-md">
+                                        <CheckCircle2 className="h-4 w-4 text-emerald-500" />
                                     </div>
                                     <div>
-                                        <p className="text-sm font-medium">Chuỗi Ngày</p>
-                                        <p className="text-xs text-muted-foreground">Tổng cộng</p>
+                                        <p className="text-sm font-medium">Đã xác nhận</p>
+                                        <p className="text-xs text-muted-foreground">Sắp tới</p>
                                     </div>
                                 </div>
-                                <span className="font-bold text-xl">{totalStreakDays}</span>
+                                <span className="font-bold text-xl">{stats?.confirmedCount ?? 0}</span>
                             </div>
 
                             <div className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg">
                                 <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-green-500/10 rounded-md">
-                                        <Award className="h-4 w-4 text-green-500" />
+                                    <div className="p-2 bg-amber-500/10 rounded-md">
+                                        <Clock className="h-4 w-4 text-amber-500" />
                                     </div>
                                     <div>
-                                        <p className="text-sm font-medium">Active Streaks</p>
-                                        <p className="text-xs text-muted-foreground">Đang duy trì</p>
+                                        <p className="text-sm font-medium">Chờ duyệt</p>
+                                        <p className="text-xs text-muted-foreground">Cần xử lý</p>
                                     </div>
                                 </div>
-                                <span className="font-bold text-xl">{activeStreaks}</span>
+                                <span className="font-bold text-xl">{stats?.pendingCount ?? 0}</span>
                             </div>
                         </div>
                     </div>

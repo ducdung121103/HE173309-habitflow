@@ -1,138 +1,145 @@
 "use client";
 
 import Link from "next/link";
-import { Flame, CheckCircle2, TrendingUp, Target, BookOpen } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
+    Calendar,
+    ShieldCheck,
+    Zap,
+    Cpu,
+    BellRing,
+    Sparkles,
+    ArrowRight,
+    CheckCircle2
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { BookAppointmentDialog } from "@/components/appointments/BookAppointmentDialog";
 
 export function HeroSection() {
     return (
-        <div className="flex flex-col items-center justify-center space-y-20 py-24 px-4 md:px-8 max-w-7xl mx-auto">
-            {/* Hero Content */}
-            <div className="text-center space-y-6 max-w-3xl">
-                <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight">
-                    Xây Dựng Thói Quen Tốt,<br />
-                    <span className="text-primary bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-blue-700">
-                        Mỗi Ngày Một Chút
+        <div className="flex flex-col items-center justify-center space-y-16 py-16 px-4 md:px-8 max-w-7xl mx-auto">
+            {/* Hero Main Content */}
+            <div className="text-center space-y-6 max-w-4xl">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/20 bg-primary/10 text-primary text-xs font-semibold">
+                    <Sparkles className="h-3.5 w-3.5" /> Kiến trúc Clean Architecture & SignalR Real-time
+                </div>
+
+                <h1 className="text-4xl md:text-6xl font-black tracking-tight leading-tight">
+                    Hệ Thống Quản Lý &<br />
+                    <span className="text-primary bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600">
+                        Đặt Lịch Hẹn Thông Minh
                     </span>
                 </h1>
-                <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                    Theo dõi lịch trình hàng ngày, xây dựng chuỗi thói quen mạnh mẽ và giữ kỷ luật
-                    với biểu đồ tiến độ trực quan. Biến mục tiêu thành thói quen bền vững.
+
+                <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                    Giải pháp quản lý lịch hẹn y tế và chăm sóc sức khỏe chuẩn công nghiệp. Kiểm tra xung đột thời gian tức thì, đồng bộ real-time đa nền tảng (Web, Desktop TCP Socket, Worker Service).
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                    <Link
-                        href="/dashboard"
-                        className="inline-flex h-12 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                    >
-                        Bắt Đầu Miễn Phí
-                    </Link>
 
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <button className="inline-flex h-12 items-center justify-center rounded-md border border-input bg-background/50 px-8 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring gap-2">
-                                <BookOpen className="h-4 w-4" /> Hướng Dẫn Sử Dụng
-                            </button>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-2xl">
-                            <DialogHeader>
-                                <DialogTitle>Chào mừng đến với HabitFlow</DialogTitle>
-                                <DialogDescription>
-                                    Người bạn đồng hành xây dựng thói quen của bạn.
-                                </DialogDescription>
-                            </DialogHeader>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-2">
+                    <BookAppointmentDialog
+                        triggerButton={
+                            <Button size="lg" className="h-12 px-8 text-base font-semibold shadow-lg gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
+                                <Calendar className="h-5 w-5" /> Đặt lịch hẹn ngay
+                            </Button>
+                        }
+                    />
 
-                            <div className="space-y-6 py-4">
-                                <div className="p-4 rounded-lg bg-primary/10 border border-primary/20">
-                                    <h3 className="font-semibold text-primary mb-1">Tác giả</h3>
-                                    <p className="text-lg font-bold">Bùi Đức Dũng</p>
-                                </div>
-
-                                <div className="space-y-4">
-                                    <div>
-                                        <h3 className="font-semibold text-lg mb-2">Giới thiệu</h3>
-                                        <p className="text-muted-foreground leading-relaxed">
-                                            HabitFlow là ứng dụng theo dõi thói quen hiện đại, giao diện tối (dark theme), giúp bạn xây dựng sự kiên trì.
-                                            Với chuỗi (streak) trực quan và theo dõi thời gian thực, việc bám sát mục tiêu trở nên dễ dàng hơn bao giờ hết.
-                                        </p>
-                                    </div>
-
-                                    <div>
-                                        <h3 className="font-semibold text-lg mb-2">Cách sử dụng</h3>
-                                        <ul className="space-y-3 text-muted-foreground">
-                                            <li className="flex items-start gap-2">
-                                                <span className="bg-secondary text-foreground w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">1</span>
-                                                <span><strong>Đăng nhập:</strong> Truy cập dashboard để bắt đầu theo dõi.</span>
-                                            </li>
-                                            <li className="flex items-start gap-2">
-                                                <span className="bg-secondary text-foreground w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">2</span>
-                                                <span><strong>Tạo thói quen:</strong> Bấm "Thêm thói quen", chọn tiêu đề, tần suất (Hàng ngày/Hàng tuần/Hàng tháng), và giờ (tùy chọn).</span>
-                                            </li>
-                                            <li className="flex items-start gap-2">
-                                                <span className="bg-secondary text-foreground w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">3</span>
-                                                <span><strong>Theo dõi tiến độ:</strong> Check-in hàng ngày để xây dựng chuỗi. Xem đồng hồ đếm ngược cho phiên tiếp theo của bạn!</span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </DialogContent>
-                    </Dialog>
+                    <Button size="lg" variant="outline" className="h-12 px-8 text-base font-semibold gap-2" asChild>
+                        <Link href="/dashboard">
+                            Truy cập Dashboard <ArrowRight className="h-4 w-4" />
+                        </Link>
+                    </Button>
                 </div>
             </div>
 
-            {/* Feature Grid */}
+            {/* Feature Highlights Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
-                <FeatureCard
-                    icon={<Flame className="h-6 w-6 text-blue-500" />}
-                    title="Chuỗi Bất Bại"
-                    description="Trực quan hóa sự kiên trì. Giữ lửa chuỗi và duy trì động lực khi nhìn thấy lịch sử phát triển của bạn."
-                    href="/dashboard"
-                />
-                <FeatureCard
-                    icon={<CheckCircle2 className="h-6 w-6 text-green-500" />}
-                    title="Điểm Danh Hàng Ngày"
-                    description="Ghi nhận thành quả mỗi ngày chỉ trong vài giây. Đánh dấu hoàn thành và tự nhìn lại tiến độ."
-                    href="/dashboard"
-                />
-                <FeatureCard
-                    icon={<TrendingUp className="h-6 w-6 text-yellow-500" />}
-                    title="Thống Kê Tiến Độ"
-                    description="Trực quan hóa hành trình của bạn với các chỉ số chi tiết và tỷ lệ hoàn thành."
-                    href="/dashboard/stats"
-                />
-                <FeatureCard
-                    icon={<Target className="h-6 w-6 text-purple-500" />}
-                    title="Mục Tiêu Tùy Chỉnh"
-                    description="Đặt thói quen hàng ngày hoặc hàng tuần phù hợp với mục tiêu sức khỏe cá nhân của bạn."
-                    href="/dashboard?action=new"
-                />
-            </div>
-        </div>
-    );
-}
-
-function FeatureCard({ icon, title, description, href }: { icon: React.ReactNode; title: string; description: string; href: string }) {
-    return (
-        <Link href={href} className="block text-left group">
-            <div className="h-full rounded-xl border border-border bg-card p-6 shadow-sm flex flex-col items-start space-y-4 transition-all duration-300 hover:border-primary/50 hover:bg-secondary/20 hover:scale-[1.02] hover:shadow-md cursor-pointer">
-                <div className="p-3 rounded-lg bg-secondary/50 group-hover:bg-primary/20 transition-colors">
-                    {icon}
+                <div className="rounded-2xl border border-border bg-card/60 p-6 shadow-sm hover:border-primary/40 hover:bg-secondary/20 transition-all duration-300">
+                    <div className="p-3 rounded-xl bg-blue-500/10 text-blue-500 w-fit mb-4">
+                        <Zap className="h-6 w-6" />
+                    </div>
+                    <h3 className="font-bold text-lg mb-2">SignalR Real-time</h3>
+                    <p className="text-muted-foreground text-xs leading-relaxed">
+                        Cơ chế kết nối tự động reconnect, broadcast sự kiện tức thì khi có lịch hẹn mới, hủy lịch hoặc cập nhật trạng thái.
+                    </p>
                 </div>
-                <div>
-                    <h3 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors">{title}</h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">
-                        {description}
+
+                <div className="rounded-2xl border border-border bg-card/60 p-6 shadow-sm hover:border-emerald-500/40 hover:bg-secondary/20 transition-all duration-300">
+                    <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-500 w-fit mb-4">
+                        <ShieldCheck className="h-6 w-6" />
+                    </div>
+                    <h3 className="font-bold text-lg mb-2">Chống Xung Đột Lịch</h3>
+                    <p className="text-muted-foreground text-xs leading-relaxed">
+                        Thuật toán so sánh khoảng thời gian `(StartA &lt; EndB) &amp;&amp; (EndA &gt; StartB)` ngăn chặn 100% tình trạng đặt trùng giờ.
+                    </p>
+                </div>
+
+                <div className="rounded-2xl border border-border bg-card/60 p-6 shadow-sm hover:border-purple-500/40 hover:bg-secondary/20 transition-all duration-300">
+                    <div className="p-3 rounded-xl bg-purple-500/10 text-purple-500 w-fit mb-4">
+                        <Cpu className="h-6 w-6" />
+                    </div>
+                    <h3 className="font-bold text-lg mb-2">TCP Socket Server</h3>
+                    <p className="text-muted-foreground text-xs leading-relaxed">
+                        Máy chủ TCP Port 5050 phục vụ Desktop App độc lập. Áp dụng `IServiceScopeFactory` an toàn concurrency đa luồng.
+                    </p>
+                </div>
+
+                <div className="rounded-2xl border border-border bg-card/60 p-6 shadow-sm hover:border-amber-500/40 hover:bg-secondary/20 transition-all duration-300">
+                    <div className="p-3 rounded-xl bg-amber-500/10 text-amber-500 w-fit mb-4">
+                        <BellRing className="h-6 w-6" />
+                    </div>
+                    <h3 className="font-bold text-lg mb-2">Worker Service</h3>
+                    <p className="text-muted-foreground text-xs leading-relaxed">
+                        Dịch vụ nền .NET `BackgroundService` định kỳ quét lịch sắp tới, tự động gửi nhắc nhở và kích hoạt SignalR bridge.
                     </p>
                 </div>
             </div>
-        </Link>
+
+            {/* Quick Overview Section */}
+            <div className="w-full rounded-2xl border bg-card/40 p-8">
+                <div className="max-w-3xl mx-auto text-center space-y-4">
+                    <h2 className="text-2xl font-bold">Dịch vụ Y tế & Chăm sóc Tiêu biểu</h2>
+                    <p className="text-muted-foreground text-sm">
+                        Đội ngũ bác sĩ chuyên khoa giàu kinh nghiệm và trang thiết bị hiện đại sẵn sàng phục vụ.
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left pt-4">
+                        <div className="p-4 rounded-xl border bg-background/60 flex items-start gap-3">
+                            <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
+                            <div>
+                                <h4 className="font-semibold text-sm">Khám tổng quát</h4>
+                                <p className="text-xs text-muted-foreground">Khám sàng lọc và tư vấn sức khỏe tổng thể định kỳ.</p>
+                                <span className="text-xs font-bold text-primary mt-1 inline-block">200.000 VNĐ • 30 phút</span>
+                            </div>
+                        </div>
+
+                        <div className="p-4 rounded-xl border bg-background/60 flex items-start gap-3">
+                            <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
+                            <div>
+                                <h4 className="font-semibold text-sm">Chăm sóc răng miệng</h4>
+                                <p className="text-xs text-muted-foreground">Lấy cao răng, kiểm tra và chăm sóc nụ cười rạng rỡ.</p>
+                                <span className="text-xs font-bold text-primary mt-1 inline-block">350.000 VNĐ • 45 phút</span>
+                            </div>
+                        </div>
+
+                        <div className="p-4 rounded-xl border bg-background/60 flex items-start gap-3">
+                            <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
+                            <div>
+                                <h4 className="font-semibold text-sm">Tư vấn dinh dưỡng</h4>
+                                <p className="text-xs text-muted-foreground">Lập thực đơn khoa học phù hợp từng thể trạng cá nhân.</p>
+                                <span className="text-xs font-bold text-primary mt-1 inline-block">300.000 VNĐ • 60 phút</span>
+                            </div>
+                        </div>
+
+                        <div className="p-4 rounded-xl border bg-background/60 flex items-start gap-3">
+                            <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
+                            <div>
+                                <h4 className="font-semibold text-sm">Vật lý trị liệu</h4>
+                                <p className="text-xs text-muted-foreground">Phục hồi chức năng cơ xương khớp và giảm đau hiệu quả.</p>
+                                <span className="text-xs font-bold text-primary mt-1 inline-block">400.000 VNĐ • 45 phút</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     );
 }

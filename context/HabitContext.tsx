@@ -68,21 +68,12 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
 
         // Sort dates descending
         const sortedDates = [...dates].sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
-        const today = new Date().toISOString().split('T')[0];
-        const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-
-        // If not completed today or yesterday, streak is broken (0), unless checking for *current* streak where today might not be done yet.
-        // However, simplest logic: count consecutive days backwards from today/yesterday.
-
-        let currentStreak = 0;
-        let checkDate = new Date();
-
         // Normalize to YYYY-MM-DD
         const formatDate = (d: Date) => d.toISOString().split('T')[0];
 
         // Check if latest completion is today or yesterday
         const latest = sortedDates[0];
-        if (latest !== formatDate(checkDate) && latest !== formatDate(new Date(Date.now() - 86400000))) {
+        if (latest !== formatDate(new Date()) && latest !== formatDate(new Date(Date.now() - 86400000))) {
             return 0;
         }
 

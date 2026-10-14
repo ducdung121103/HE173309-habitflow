@@ -1,12 +1,12 @@
 "use client";
 
 import { useNotifications } from "@/context/NotificationContext";
-import { Bell, Check, Trash2, AlertTriangle, Trophy, Clock, Flame } from "lucide-react";
+import { Bell, Check, AlertTriangle, Trophy, Clock, Flame, Calendar } from "lucide-react";
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from "@/components/ui/popover"; // Ensure this component exists or is standard in project (we saw imports in task status, but let's assume standard shadcn)
+} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
@@ -15,12 +15,16 @@ export function NotificationBell() {
     const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
 
     const getIcon = (type: string) => {
-        switch (type) {
+        switch (type.toLowerCase()) {
             case "risk": return <AlertTriangle className="h-4 w-4 text-orange-500" />;
             case "milestone": return <Trophy className="h-4 w-4 text-yellow-500" />;
             case "achievement": return <Flame className="h-4 w-4 text-orange-500" />;
             case "success": return <Check className="h-4 w-4 text-green-500" />;
             case "reminder": return <Clock className="h-4 w-4 text-blue-500" />;
+            case "appointment":
+            case "newappointment": return <Calendar className="h-4 w-4 text-indigo-500" />;
+            case "status":
+            case "statuschanged": return <Check className="h-4 w-4 text-emerald-500" />;
             default: return <Bell className="h-4 w-4" />;
         }
     };
